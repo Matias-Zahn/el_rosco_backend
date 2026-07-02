@@ -1,4 +1,4 @@
-import { ConfigurarPartidaDto } from "../dtos";
+import { ConfigurarPartidaDto, FinalizarPartidaDto } from "../dtos";
 import { CustomError } from "../errors/CustomErros";
 import { PalabraModel } from "../models/palabra.model";
 import { PartidaModel } from "../models/partida.model";
@@ -44,5 +44,39 @@ export class PartidaService {
 
       throw CustomError.internalServerError("Error al generar las partidas");
     }
+  }
+
+  public async finalizarPartida(dto: FinalizarPartidaDto, usuarioId: number) {
+    const puntajeFinal = dto.aciertos;
+
+    let mensaje = "";
+
+    if (puntajeFinal === 27) {
+      mensaje = "Excelente Partida";
+    } else if (puntajeFinal >= 23 && puntajeFinal <= 26) {
+      mensaje = "Muy Bien!!";
+    } else if (puntajeFinal >= 19 && puntajeFinal <= 22) {
+      mensaje = "Bien!";
+    } else if (puntajeFinal >= 15 && puntajeFinal <= 18) {
+      mensaje = "Mmm...estuvo regular!";
+    } else {
+      mensaje = "A seguir estudiando!";
+    }
+
+    const fueActualizado = await this.partidaModelo.registrarFinPartida(
+      dto.partidaId,
+      usuarioId,
+      puntajeFinal,
+    );
+
+    if (!fueActualizado)
+      throw CustomError.forbidden(
+        "La partida no existe, no tenés permisos, o ya fue finalizada previamente.",
+      );
+
+    return {
+      totalAcertadas: puntajeFinal,
+      mensaje: mensaje,
+    };
   }
 }

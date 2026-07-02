@@ -4,6 +4,7 @@ import { PartidaController } from "../controllers/partida.controller";
 import { PalabraModel } from "../models/palabra.model";
 import { PartidaModel } from "../models/partida.model";
 import { PartidaService } from "../services/partida.service";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 export class PartidaRoutes {
   static getRoutes(): Router {
@@ -17,7 +18,17 @@ export class PartidaRoutes {
 
     const partidaController = new PartidaController(partidaService);
 
-    router.post("/configurar", partidaController.configurarPartida);
+    router.post(
+      "/configurar",
+      AuthMiddleware.validarJWT,
+      partidaController.configurarPartida,
+    );
+
+    router.patch(
+      "/finalizar",
+      AuthMiddleware.validarJWT,
+      partidaController.finalizarPartida,
+    );
 
     return router;
   }

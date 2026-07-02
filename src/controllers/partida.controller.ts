@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PartidaService } from "../services/partida.service";
-import { ConfigurarPartidaDto } from "../dtos";
+import { ConfigurarPartidaDto, FinalizarPartidaDto } from "../dtos";
 import { CustomError } from "../errors/CustomErros";
 
 export class PartidaController {
@@ -20,18 +20,24 @@ export class PartidaController {
 
     if (error) return res.status(400).json({ error });
 
-    const usuarioId = Number(req.body.usuarioId);
-    if (!usuarioId || isNaN(usuarioId)) {
-      return res
-        .status(400)
-        .json({
-          error: "Falta el identificador del usuario para iniciar la partida",
-        });
-    }
+    const usuarioId = req.body.usuarioId;
 
     this.partidaService
-      .generarPartida(configurarPartidaDto!, req.body.usuarioId)
+      .generarPartida(configurarPartidaDto!, usuarioId)
       .then((partidaInfo) => res.status(201).json(partidaInfo))
       .catch((err) => this.handleError(err, res));
+  };
+
+  public finalizarPartida = (req: Request, res: Response) => {
+    const [error, finalizarPartidaDto] = FinalizarPartidaDto.create(req.body);
+
+    if (error) return res.status(400).json({ error });
+
+    const usuarioId = req.body.usuarioId;
+
+    this.partidaService
+      .finalizarPartida(finalizarPartidaDto!, usuarioId)
+      .then((infoPartida) => res.status(200).json(infoPartida))
+      .catch((error) => this.handleError(error, res));
   };
 }
