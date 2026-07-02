@@ -79,4 +79,40 @@ export class PartidaService {
       mensaje: mensaje,
     };
   }
+
+  public async obtenerMejoresPartidas(usuarioId: number) {
+    const mejoresPartias =
+      await this.partidaModelo.obtenerMejoresPartidas(usuarioId);
+
+    return mejoresPartias;
+  }
+
+  public async obtenerEstadisticasGlobales() {
+    const [
+      ranking,
+      masGanador,
+      masRapidos,
+      ganadorBajo,
+      ganadorMedio,
+      ganadorAlto,
+    ] = await Promise.all([
+      this.partidaModelo.obtenerRankingGeneral(),
+      this.partidaModelo.obtenerMasGanadorGeneral(),
+      this.partidaModelo.obtenerMasRapidos(),
+      this.partidaModelo.obtenerMasGanadorPorDificultad(1),
+      this.partidaModelo.obtenerMasGanadorPorDificultad(2),
+      this.partidaModelo.obtenerMasGanadorPorDificultad(3),
+    ]);
+
+    return {
+      ranking,
+      masGanadorGeneral: masGanador.length > 0 ? masGanador[0] : null,
+      masGanadorPorDificultad: {
+        baja: ganadorBajo.length > 0 ? ganadorBajo[0] : null,
+        media: ganadorMedio.length > 0 ? ganadorMedio[0] : null,
+        alta: ganadorAlto.length > 0 ? ganadorAlto[0] : null,
+      },
+      masRapidos,
+    };
+  }
 }

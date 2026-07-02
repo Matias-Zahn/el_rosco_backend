@@ -40,4 +40,20 @@ export class PartidaController {
       .then((infoPartida) => res.status(200).json(infoPartida))
       .catch((error) => this.handleError(error, res));
   };
+
+  public obtenerMejoresPartidas = (req: Request, res: Response) => {
+    const usuarioId = req.body.usuarioId;
+
+    this.partidaService
+      .obtenerMejoresPartidas(usuarioId)
+      .then((historial) => res.status(200).json(historial))
+      .catch((error) => this.handleError(error, res));
+  };
+
+  public obtenerEstadisticas = (req: Request, res: Response) => {
+    this.partidaService
+      .obtenerEstadisticasGlobales()
+      .then((estadisiticas) => res.status(200).json(estadisiticas))
+      .catch((error) => this.handleError(error, res));
+  };
 }

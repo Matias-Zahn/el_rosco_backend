@@ -18,6 +18,14 @@ export class PartidaRoutes {
 
     const partidaController = new PartidaController(partidaService);
 
+    router.get("/estadisticas", partidaController.obtenerEstadisticas);
+
+    router.get(
+      "/mejores",
+      AuthMiddleware.validarJWT,
+      partidaController.obtenerMejoresPartidas,
+    );
+
     router.post(
       "/configurar",
       AuthMiddleware.validarJWT,
