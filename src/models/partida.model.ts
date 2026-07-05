@@ -61,7 +61,7 @@ export class PartidaModel {
 
   public async obtenerMejoresPartidas(usuarioId: number) {
     const query =
-      "SELECT id, dificultad_id, tiempo_maximo, ayuda_adicional, puntaje_final FROM partidas WHERE usuario_id = ? AND puntaje_final IS NOT NULL ORDER BY puntaje_final DESC LIMIT 3";
+      "SELECT id, dificultad_id, tiempo_maximo, ayuda_adicional, puntaje_final, fecha_fin FROM partidas WHERE usuario_id = ? AND puntaje_final IS NOT NULL ORDER BY puntaje_final DESC LIMIT 3";
 
     try {
       const [rows] = await this.conexion.execute(query, [usuarioId]);

@@ -30,7 +30,7 @@ export class ConfigurarPartidaDto {
       return ["Falta seleccionar el tiempo máximo"];
     }
     tiempoMaximo = Number(tiempoMaximo);
-    if (![0, 2, 3, 5].includes(tiempoMaximo)) {
+    if (![0, 120, 180, 300].includes(tiempoMaximo)) {
       return ["El tiempo máximo debe ser 2, 3, 5 minutos o 0 (sin tiempo)"];
     }
 

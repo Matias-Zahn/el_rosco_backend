@@ -31,6 +31,7 @@ export class AuthMiddleware {
       return;
     }
 
+    req.body = req.body || {};
     req.body.usuarioId = payload.id;
 
     next();
