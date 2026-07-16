@@ -33,24 +33,40 @@ export class PartidaModel {
     partidaId: number,
     usuarioId: number,
     puntajeFinal: number,
-  ): Promise<boolean> {
-    // Incluimos el usuario_id en el WHERE por pura seguridad.
-    // Así evitamos que alguien intente mandarle puntaje a una partida que no es suya.
-    const query = `
+  ): Promise<{ exito: boolean; tiempoSegundos?: number }> {
+    const updateQuery = `
       UPDATE partidas 
       SET puntaje_final = ?, fecha_fin = NOW()
       WHERE id = ? AND usuario_id = ? AND puntaje_final IS NULL
     `;
 
+    const selectQuery = `
+      SELECT TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin) AS tiempo_tardado
+      FROM partidas
+      WHERE id = ?
+    `;
     try {
-      const [result] = await this.conexion.execute(query, [
+      const [updateResult] = await this.conexion.execute(updateQuery, [
         puntajeFinal,
         partidaId,
         usuarioId,
       ]);
+      const filasAfectadas = (updateResult as any).affectedRows;
+      // Si no se actualizó nada (partida ya finalizada o no existe), salimos
+      if (filasAfectadas === 0) {
+        return { exito: false };
+      }
+      // Si se actualizó con éxito, buscamos cuánto tiempo tardó
+      const [selectResult] = await this.conexion.execute(selectQuery, [
+        partidaId,
+      ]);
 
-      // Si affectedRows es mayor a 0, la actualización se hizo de forma exitosa
-      return (result as any).affectedRows > 0;
+      const filas = selectResult as any[];
+      const tiempoTardado = filas.length > 0 ? filas[0].tiempo_tardado : 0;
+      return {
+        exito: true,
+        tiempoSegundos: tiempoTardado,
+      };
     } catch (error) {
       console.error("Error al registrar el fin de la partida:", error);
       throw CustomError.internalServerError(

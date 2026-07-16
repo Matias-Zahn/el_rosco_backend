@@ -49,34 +49,20 @@ export class PartidaService {
   public async finalizarPartida(dto: FinalizarPartidaDto, usuarioId: number) {
     const puntajeFinal = dto.aciertos;
 
-    let mensaje = "";
-
-    if (puntajeFinal === 27) {
-      mensaje = "Excelente Partida";
-    } else if (puntajeFinal >= 23 && puntajeFinal <= 26) {
-      mensaje = "Muy Bien!!";
-    } else if (puntajeFinal >= 19 && puntajeFinal <= 22) {
-      mensaje = "Bien!";
-    } else if (puntajeFinal >= 15 && puntajeFinal <= 18) {
-      mensaje = "Mmm...estuvo regular!";
-    } else {
-      mensaje = "A seguir estudiando!";
-    }
-
-    const fueActualizado = await this.partidaModelo.registrarFinPartida(
+    const resultado = await this.partidaModelo.registrarFinPartida(
       dto.partidaId,
       usuarioId,
       puntajeFinal,
     );
 
-    if (!fueActualizado)
+    if (!resultado.exito)
       throw CustomError.forbidden(
         "La partida no existe, no tenés permisos, o ya fue finalizada previamente.",
       );
 
     return {
       totalAcertadas: puntajeFinal,
-      mensaje: mensaje,
+      tiempoSegundo: resultado.tiempoSegundos,
     };
   }
 
