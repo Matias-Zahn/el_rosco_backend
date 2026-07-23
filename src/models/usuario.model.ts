@@ -4,9 +4,6 @@ import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 export class UsuarioModel {
   constructor(private readonly conexion: Connection) {}
 
-  /**
-   * obtenerUsuario
-   */
   public async buscarPorNombreUsuario(
     nombre: string,
   ): Promise<IUsuario | null> {
@@ -22,9 +19,6 @@ export class UsuarioModel {
     return null;
   }
 
-  /**
-   * insertarUsuario
-   */
   public async insertarUsuario(usuario: IUsuario): Promise<Number> {
     const sql = `
       INSERT INTO usuarios (nombre_usuario, password, email, fecha_nacimiento) 

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { envs } from "./config/envs";
 import { UsuarioRoutes } from "./routes/usuario.routes";
-import { PartidaRoutes } from "./routes/partida.routes"; // 1. Importamos tus nuevas rutas
+import { PartidaRoutes } from "./routes/partida.routes";
 
 const app = express();
 

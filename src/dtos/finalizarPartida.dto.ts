@@ -19,7 +19,6 @@ export class FinalizarPartidaDto {
     if (errores === undefined || isNaN(Number(errores)) || errores < 0)
       return ["Los errores son obligatorios y no pueden ser negativos"];
 
-    // Validación extra del juego: El rosco completo tiene 27 letras
     if (Number(aciertos) + Number(errores) > 27) {
       return [
         "La suma de aciertos y errores no puede superar las 27 letras del rosco",

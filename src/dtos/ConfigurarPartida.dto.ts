@@ -16,7 +16,6 @@ export class ConfigurarPartidaDto {
 
     let { dificultadId, tiempoMaximo, ayudaAdicional } = object;
 
-    // 1. Validación de Dificultad [cite: 19]
     if (dificultadId === undefined || dificultadId === null) {
       return ["Falta seleccionar la dificultad"];
     }
@@ -25,7 +24,6 @@ export class ConfigurarPartidaDto {
       return ["El nivel de dificultad seleccionado no es válido"];
     }
 
-    // 2. Validación de Tiempo Máximo
     if (tiempoMaximo === undefined || tiempoMaximo === null) {
       return ["Falta seleccionar el tiempo máximo"];
     }
@@ -34,11 +32,10 @@ export class ConfigurarPartidaDto {
       return ["El tiempo máximo debe ser 2, 3, 5 minutos o 0 (sin tiempo)"];
     }
 
-    // 3. Validación de Ayuda Adicional
     if (ayudaAdicional === undefined || ayudaAdicional === null) {
       return ["Falta indicar si desea ayuda adicional"];
     }
-    // Manejo seguro por si el front envía el booleano como string ("true" o "false")
+
     const ayuda = ayudaAdicional === "true" || ayudaAdicional === true;
 
     return [

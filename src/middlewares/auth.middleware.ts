@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { JWTAdpater } from "../config";
-import { brotliDecompress } from "node:zlib";
 
 export class AuthMiddleware {
   static validarJWT = async (

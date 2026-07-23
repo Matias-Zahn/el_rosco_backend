@@ -22,10 +22,6 @@ export class PartidaModel {
       ayudaAdicional,
     ]);
 
-    /* En los INSERT, 'result' contiene un objeto de tipo ResultSetHeader.
-      Accedemos a 'insertId' para obtener el ID único generado por la base de datos
-      y se lo retornamos al Service.
-    */
     return (result as any).insertId;
   }
 
@@ -52,11 +48,10 @@ export class PartidaModel {
         usuarioId,
       ]);
       const filasAfectadas = (updateResult as any).affectedRows;
-      // Si no se actualizó nada (partida ya finalizada o no existe), salimos
       if (filasAfectadas === 0) {
         return { exito: false };
       }
-      // Si se actualizó con éxito, buscamos cuánto tiempo tardó
+
       const [selectResult] = await this.conexion.execute(selectQuery, [
         partidaId,
       ]);
@@ -103,7 +98,7 @@ export class PartidaModel {
     return rows;
   }
 
-  // 2. Jugador más ganador (el que sacó 27 puntos más veces)
+  // 2. Jugador más ganadorel que sacó 27 puntos más veces
   async obtenerMasGanadorGeneral() {
     const query = `
       SELECT u.nombre_usuario, COUNT(p.id) as victorias 
@@ -120,7 +115,7 @@ export class PartidaModel {
 
   async obtenerMasRapidos() {
     // Calculamos la diferencia en segundos entre el inicio y el fin.
-    // Solo traemos a los que sacaron puntaje perfecto (27).
+    // Solo taremos a los que sacaron puntaje perfecto.
     const query = `
       SELECT u.nombre_usuario, 
              TIMESTAMPDIFF(SECOND, p.fecha_inicio, p.fecha_fin) as segundos_tardados, 

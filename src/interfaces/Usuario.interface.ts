@@ -1,7 +1,7 @@
 export interface IUsuario {
-  id_usuario?: number; // Opcional porque al insertar no lo tenés, lo genera MySQL
+  id_usuario?: number;
   nombre_usuario: string;
-  password: string; // Le ponemos hash para recordar que viaja encriptada
+  password: string;
   email: string;
   fecha_nacimiento: string | Date;
 }
